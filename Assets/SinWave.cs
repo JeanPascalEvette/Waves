@@ -24,8 +24,8 @@ public class SinWave
     public float C { get; set; }
     [XmlElement("D")]
     public float D { get; set; }
-    [XmlElement("Direction")]
-    public string dir { get; set; }
+    [XmlElement("Angle")]
+    public float angle{ get; set; }
 
     public SinWave()
     {
@@ -33,20 +33,15 @@ public class SinWave
         B = 0.0f;
         C = 0.0f;
         D = 0.0f;
-        dir = "X";
+        angle = 0.0f;
     }
-    
 
-    public Vector3 ComputeSinValue(float t)
-	{
-        Vector3 result = new Vector3(0, 0, 0);
-		if (dir == "X")
-			result.x = A* Mathf.Sin(B*(t - C)) + D;
-		else if (dir == "Y")
-            result.y = A* Mathf.Sin(B*(t - C)) + D;
-		else if (dir == "Z")
-            result.z = A* Mathf.Sin(B*(t - C)) + D;
-        return result;
+    public float ComputeSinValue(float x, float z)
+    {
+        //return Mathf.Sin(x) * Mathf.Cos(z);
+
+        //return Mathf.Sin(Mathf.Sqrt(x * x + z * z));
+        return A * Mathf.Sin(B * (Mathf.Sqrt(x * x + z * z) - C)) + D;
     }
 }
 
