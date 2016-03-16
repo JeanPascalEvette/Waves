@@ -7,7 +7,6 @@ public class GameLogic : MonoBehaviour {
     private SinWave[] waveList;
     private Vector3[][] positions;
     private Vector3[][] newPositions;
-    private GameObject pointHolder;
 
     public int currentWave;
 
@@ -15,25 +14,49 @@ public class GameLogic : MonoBehaviour {
     public float distance = 10.0f;
     public float surfaceSize = 3.0f;
     public float speed = 1.0f;
+    [SerializeField]
+    private int NumerOfTilesPerRow = 10;
 
     // Use this for initialization
-    void Start () {
-            waveList = XMLLoader.LoadFile("Assets/Waves.xml");
-            pointHolder = new GameObject("PointHolder");
+    void Start() {
+        waveList = XMLLoader.LoadFile("Assets/Waves.xml");
 
 
         positions = new Vector3[numRows][];
         newPositions = new Vector3[numRows][];
+
+        var halfDist = (numRows-1) * distance / 2;
         for (int x = 0; x < numRows; x++)
         {
             positions[x] = new Vector3[numRows];
             newPositions[x] = new Vector3[numRows];
             for (int z = 0; z < numRows; z++)
             {
-                positions[x][z] = new Vector3(x * distance, 0, z * distance);
-                newPositions[x][z] = new Vector3(x * distance, 0, z * distance);
+                positions[x][z] = new Vector3(-halfDist + x * distance, 0, -halfDist + z * distance);
+                newPositions[x][z] = new Vector3(-halfDist + x * distance, 0, -halfDist + z * distance);
             }
         }
+
+        Vector3 position = Vector3.zero;
+
+        var tile = (GameObject)Resources.Load("Prefabs/WavesTile");
+        Vector3 scale = tile.transform.localScale;
+        Vector3 originalScale = tile.transform.localScale;
+        for (int x = 0; x < NumerOfTilesPerRow; x++)
+        {
+            position.z = 0;
+            scale.z = originalScale.z;
+            for (int y = 0; y < NumerOfTilesPerRow; y++)
+            {
+                position.z += (numRows-1) * distance * originalScale.z;
+                scale.z *= -1;
+                tile = (GameObject)Instantiate(Resources.Load("Prefabs/WavesTile"), position, Quaternion.identity);
+                tile.transform.localScale = scale;
+            }
+            scale.x *= -1;
+            position.x += (numRows-1) * distance * originalScale.x;
+        }
+
         
     }
 	
