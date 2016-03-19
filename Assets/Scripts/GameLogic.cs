@@ -24,12 +24,14 @@ public class GameLogic : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+        numRows += 1; // Most calculation need to be +1'd
         waveList = XMLLoader.LoadFile("Assets/Waves.xml");
 
         if (Waves == null)
             Waves = GameObject.Find("Waves").transform;
         if (Waves == null)
             Waves = new GameObject("Waves").transform;
+        Waves.transform.position = new Vector3(0, 0, 0);
 
 
         positions = new Vector3[numRows][];
@@ -91,32 +93,15 @@ public class GameLogic : MonoBehaviour {
         }
 
 
-
-        //DEBUG ONLY TO REMOVE LATER
-        float minDebugX = float.MaxValue;
-        float minDebugZ = float.MaxValue;
-        float maxDebugX = float.MinValue;
-        float maxDebugZ = float.MinValue;
-        // END DEBUG
-
-
         //Waves computation
 
         for (int x = 0; x < numRows; x++)
         {
             for (int z = 0; z < numRows; z++)
             {
-                var currentChild = newPositions[x][z];
-                var currentRelativePos = currentChild / (numRows * distance) * 10.0f * surfaceSize;
-
-                if (currentRelativePos.x < minDebugX)
-                    minDebugX = currentRelativePos.x;
-                if (currentRelativePos.x > maxDebugX)
-                    maxDebugX = currentRelativePos.x;
-                if (currentRelativePos.z < minDebugZ)
-                    minDebugZ = currentRelativePos.z;
-                if (currentRelativePos.z > minDebugZ)
-                    maxDebugZ = currentRelativePos.z;
+                var currentChild = positions[x][z];
+                var currentRelativePos = currentChild / ((numRows-1) * distance) * 10.0f * surfaceSize;
+                
 
                 for (int u = 0; u < waveList.Length; u++)
                 {
@@ -163,9 +148,9 @@ public class GameLogic : MonoBehaviour {
     {
         int[] triangles = new int[(numRows*numRows)*3*2];
         int i = 0;
-        for (int x = 0; x < numRows - 1; x++)
+        for (int x = 0; x < numRows-1; x++)
         {
-            for (int z = 0; z < numRows - 1; z++)
+            for (int z = 0; z < numRows-1; z++)
             {
                 triangles[i++] = (x * numRows) + z;
                 triangles[i++] = (x * numRows) + z + 1;

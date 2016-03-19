@@ -30,13 +30,19 @@ public class MeshBuilder : MonoBehaviour {
             var mesh = GetComponent<MeshFilter>().mesh;
             mesh.vertices = gLogic.GetVertices();
 
+            if(!isWireFrame)
+            {
+                float minHeight = GetComponent<MeshRenderer>().bounds.max.y * 1.7f;
+                GetComponent<MeshRenderer>().material.SetFloat("_HeightMin", minHeight);
+            }
+
         }
 	}
 
     public void toggleWireframe()
     {
         if(isWireFrame)
-            GetComponent<MeshRenderer>().material = (Material)Resources.Load("Materials/WaveMaterial");
+            GetComponent<MeshRenderer>().material = (Material)Resources.Load("Materials/CustomWaveMaterial");
         else
             GetComponent<MeshRenderer>().material = (Material)Resources.Load("Materials/Wireframe");
 
