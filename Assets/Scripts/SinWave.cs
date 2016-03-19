@@ -41,7 +41,8 @@ public class SinWave
         //return Mathf.Sin(x) * Mathf.Cos(z);
 
         //return Mathf.Sin(Mathf.Sqrt(x * x + z * z));
-        return A * Mathf.Sin(B * (Mathf.Sqrt(x * x + z * z) - C)) + D;
+        float sinAngle = B * (Mathf.Sqrt(x * x + z * z) - C);
+        return A * Mathf.Sin(sinAngle) + D;
     }
 }
 

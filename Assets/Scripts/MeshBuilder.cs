@@ -5,6 +5,7 @@ public class MeshBuilder : MonoBehaviour {
 
     GameLogic gLogic;
     private bool isMeshCreated = false;
+    private bool isWireFrame = false;
 
 	// Use this for initialization
 	void Start () {
@@ -13,6 +14,7 @@ public class MeshBuilder : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
         if(!isMeshCreated)
         {
             isMeshCreated = true;
@@ -27,6 +29,17 @@ public class MeshBuilder : MonoBehaviour {
 
             var mesh = GetComponent<MeshFilter>().mesh;
             mesh.vertices = gLogic.GetVertices();
+
         }
 	}
+
+    public void toggleWireframe()
+    {
+        if(isWireFrame)
+            GetComponent<MeshRenderer>().material = (Material)Resources.Load("Materials/WaveMaterial");
+        else
+            GetComponent<MeshRenderer>().material = (Material)Resources.Load("Materials/Wireframe");
+
+        isWireFrame = !isWireFrame;
+    }
 }
