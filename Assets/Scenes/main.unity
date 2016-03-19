@@ -185,52 +185,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   height: 2
---- !u!1001 &909585681
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 435542, guid: cf0c5b96569d69042b82156a2ac9b235, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 435542, guid: cf0c5b96569d69042b82156a2ac9b235, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 435542, guid: cf0c5b96569d69042b82156a2ac9b235, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 435542, guid: cf0c5b96569d69042b82156a2ac9b235, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 435542, guid: cf0c5b96569d69042b82156a2ac9b235, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 435542, guid: cf0c5b96569d69042b82156a2ac9b235, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 435542, guid: cf0c5b96569d69042b82156a2ac9b235, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 435542, guid: cf0c5b96569d69042b82156a2ac9b235, type: 2}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 2394626, guid: cf0c5b96569d69042b82156a2ac9b235, type: 2}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 2224e4fdac143a14ea45b86ebbfb68f4, type: 2}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: cf0c5b96569d69042b82156a2ac9b235, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &1105551315
 GameObject:
   m_ObjectHideFlags: 0
@@ -290,7 +244,7 @@ MonoBehaviour:
   distance: 20
   surfaceSize: 1
   speed: 1
-  NumerOfTilesPerRow: 1
+  NumerOfTilesPerRow: 10
   aSkin: {fileID: 11400000, guid: fd8357c8e7ac5004fa1dc560ed88a07d, type: 2}
 --- !u!4 &1636404704
 Transform:

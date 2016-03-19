@@ -9,17 +9,17 @@
     <Angle>0</Angle>
   </Wave>
   <Wave>
-    <A>1.5</A>
+    <A>.5</A>
     <B>1</B>
-    <C>1.1</C>
-    <D>2.1</D>
+    <C>.1</C>
+    <D>.1</D>
     <Angle>90</Angle>
   </Wave>
   <Wave>
     <A>2</A>
-    <B>1.2</B>
+    <B>.2</B>
     <C>0.1</C>
-    <D>1.2</D>
+    <D>.2</D>
     <Angle>90</Angle>
   </Wave>
   <Wave>
@@ -33,14 +33,14 @@
     <A>.5</A>
     <B>.9</B>
     <C>1</C>
-    <D>1.4</D>
+    <D>.4</D>
     <Angle>180</Angle>
   </Wave>
   <Wave>
-    <A>1.2</A>
-    <B>1.9</B>
+    <A>.2</A>
+    <B>.9</B>
     <C>1</C>
-    <D>2.1</D>
+    <D>.1</D>
     <Angle>0</Angle>
   </Wave>
 </ListOfWaves>

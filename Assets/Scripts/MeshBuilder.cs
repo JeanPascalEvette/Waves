@@ -32,7 +32,7 @@ public class MeshBuilder : MonoBehaviour {
 
             if(!isWireFrame)
             {
-                float minHeight = GetComponent<MeshRenderer>().bounds.max.y * 1.7f;
+                float minHeight = GetComponent<MeshRenderer>().bounds.max.y * .7f;
                 GetComponent<MeshRenderer>().material.SetFloat("_HeightMin", minHeight);
             }
 
