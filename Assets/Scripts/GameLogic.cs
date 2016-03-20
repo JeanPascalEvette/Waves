@@ -25,7 +25,8 @@ public class GameLogic : MonoBehaviour {
 
     private int[] triangles = null;
     private Vector3[] vertices = null;
-    private Vector3[] normals = null;
+    private Vector3[] normalsPos = null;
+    private Vector3[] normalsNeg = null;
 
 
     // Use this for initialization
@@ -149,20 +150,26 @@ public class GameLogic : MonoBehaviour {
 
         triangles = null;
         vertices = null;
-        normals = null;
+        normalsPos = null;
+        normalsNeg = null;
 
 
     }
 
-    public Vector3[] GetNormals()
+    public Vector3[] GetNormals(float scale)
     {
-        return normals;
+        if (scale > 0)
+            return normalsPos;
+        else
+            return normalsNeg;
     }
 
-    public void SetNormals(Vector3[] newNormals)
+    public void SetNormals(Vector3[] newNormals, float scale)
     {
-        if (normals == null)
-            normals = newNormals;
+        if (scale > 0 && normalsPos == null)
+            normalsPos = newNormals;
+        if (scale < 0 && normalsNeg == null)
+            normalsNeg = newNormals;
     }
 
     public int[] GetTriangles()
