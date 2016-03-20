@@ -26,6 +26,7 @@ public class SinWave
     public float D { get; set; }
     [XmlElement("Angle")]
     public float angle{ get; set; }
+    
 
     public SinWave()
     {

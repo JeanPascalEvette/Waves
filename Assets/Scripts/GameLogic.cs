@@ -14,7 +14,7 @@ public class GameLogic : MonoBehaviour {
 
     public int numRows = 50;
     public float distance = 10.0f;
-    public float surfaceSize = 1.0f;
+    public float Frequency = 1.0f;
     public float speed = 1.0f;
     [SerializeField]
     private int NumerOfTilesPerRow = 10;
@@ -108,7 +108,7 @@ public class GameLogic : MonoBehaviour {
             for (int z = 0; z < numRows; z++)
             {
                 var currentChild = positions[x][z];
-                var currentRelativePos = currentChild / ((numRows-1) * distance) * 10.0f * surfaceSize;
+                var currentRelativePos = currentChild / ((numRows-1) * distance) * 10.0f * Frequency;
                 
 
                 for (int u = 0; u < waveList.Length; u++)
@@ -116,7 +116,7 @@ public class GameLogic : MonoBehaviour {
                     //Calculate Y
                     var newPos = 0.0f;
                     newPos += (waveList[u].ComputeSinValue(currentRelativePos.x + Time.time * speed, currentRelativePos.z + Time.time * speed) * numRows * distance);
-
+                    
 
                     //Calculate x/z
                     var angle = waveList[u].angle;
@@ -131,13 +131,7 @@ public class GameLogic : MonoBehaviour {
                 }
             }
         }
-
-        int i = 0;
-        if (!(newPositions[0][49].y == newPositions[0][0].y && newPositions[0][0].y == newPositions[49][49].y && newPositions[0][0].y == newPositions[49][0].y))
-        {
-            i++;
-        }
-
+        
         for (int x = 0; x < numRows; x++)
         {
             for (int z = 0; z < numRows; z++)
