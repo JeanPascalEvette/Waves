@@ -26,7 +26,8 @@ public class SinWave
     public float D { get; set; }
     [XmlElement("Angle")]
     public float angle{ get; set; }
-    
+
+    private bool disabled;
 
     public SinWave()
     {
@@ -35,10 +36,23 @@ public class SinWave
         C = 0.0f;
         D = 0.0f;
         angle = 0.0f;
+        disabled = false;
+    }
+
+    public bool IsDisabled()
+    {
+        return disabled;
+    }
+
+    public void ToggleDisabled()
+    {
+        disabled = !disabled;
     }
 
     public float ComputeSinValue(float x, float z)
     {
+        if (disabled) return 0f;
+
         //return Mathf.Sin(x) * Mathf.Cos(z);
 
         //return Mathf.Sin(Mathf.Sqrt(x * x + z * z));

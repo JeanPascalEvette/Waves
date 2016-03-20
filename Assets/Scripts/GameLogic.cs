@@ -29,6 +29,9 @@ public class GameLogic : MonoBehaviour {
     private Vector3[] normalsNeg = null;
 
 
+    private int GUIXCoord = 0;
+    private int GUIYCoord = 0;
+
     // Use this for initialization
     void Start() {
         numRows += 1; // Most calculation need to be +1'd
@@ -85,18 +88,146 @@ public class GameLogic : MonoBehaviour {
     void OnGUI()
     {
         var style = new GUIStyle(aSkin.GetStyle("box"));
-        style.alignment = TextAnchor.MiddleCenter;
-        UnityEditor.Handles.Label(transform.position, "Test", style);
+        var styleHeader = new GUIStyle(aSkin.GetStyle("box"));
+        var styleSelected = new GUIStyle(aSkin.GetStyle("box"));
+        var styleDisabled = new GUIStyle(aSkin.GetStyle("box"));
+        styleHeader.fontStyle = FontStyle.Bold;
+        styleHeader.normal.textColor = Color.black;
+        style.normal.textColor = Color.green;
+        styleSelected.normal.textColor = Color.blue;
+        styleDisabled.normal.textColor = Color.red;
+
+        float xCell = 80.0f;
+        float xMargin = 10.0f;
+        float yCell = 20.0f;
+        float yMargin = 5.0f;
+
+        Vector3 CurrentPos = new Vector3(xMargin, yMargin, 0);
+
+        GUI.Label(new Rect(CurrentPos.x, CurrentPos.y, xCell, yCell), "Wave", styleHeader);
+        GUI.Label(new Rect(CurrentPos.x + (xCell + xMargin) * 1, CurrentPos.y, xCell, yCell), "A", styleHeader);
+        GUI.Label(new Rect(CurrentPos.x + (xCell + xMargin) * 2, CurrentPos.y, xCell, yCell), "B", styleHeader);
+        GUI.Label(new Rect(CurrentPos.x + (xCell + xMargin) * 3, CurrentPos.y, xCell, yCell), "C", styleHeader);
+        GUI.Label(new Rect(CurrentPos.x + (xCell + xMargin) * 4, CurrentPos.y, xCell, yCell), "D", styleHeader);
+        CurrentPos.y += yCell + yMargin;
+
+        for (int y = 0; y < waveList.Length; y++)
+        {
+            if (GUIXCoord == -1 && GUIYCoord == y)
+                GUI.Label(new Rect(CurrentPos.x, CurrentPos.y, xCell, yCell), "Wave " + y, styleSelected);
+            else if(waveList[y].IsDisabled())
+                GUI.Label(new Rect(CurrentPos.x, CurrentPos.y, xCell, yCell), "Wave " + y, styleDisabled);
+            else
+                GUI.Label(new Rect(CurrentPos.x, CurrentPos.y, xCell, yCell), "Wave " + y, style);
+
+
+            for(int x = 1; x <= 4; x++)
+            {
+                float value = 0f;
+                switch(x)
+                {
+                    case 1: value = waveList[y].A; break;
+                    case 2: value = waveList[y].B; break;
+                    case 3: value = waveList[y].C; break;
+                    case 4: value = waveList[y].D; break;
+                }
+                if (GUIXCoord == x - 1 && GUIYCoord == y)
+                    GUI.Label(new Rect(CurrentPos.x + (xCell + xMargin) * x, CurrentPos.y, xCell, yCell), value.ToString("F1"), styleSelected);
+                else if (waveList[y].IsDisabled())
+                    GUI.Label(new Rect(CurrentPos.x + (xCell + xMargin) * x, CurrentPos.y, xCell, yCell), value.ToString("F1"), styleDisabled);
+                else
+                    GUI.Label(new Rect(CurrentPos.x + (xCell + xMargin) * x, CurrentPos.y, xCell, yCell), value.ToString("F1"), style);
+            }
+            
+
+            CurrentPos.y += yCell + yMargin;
+        }
     }
 
     // Update is called once per frame
     void Update () {
         //Inputs
-        if(Input.GetKeyDown(KeyCode.E))
+        if(Input.GetKeyDown(KeyCode.R))
         {
             for(int u = 0; u < Waves.childCount; u++)
             {
                 Waves.GetChild(u).GetComponent<MeshBuilder>().toggleWireframe();
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.S))
+        {
+            GUIYCoord = (GUIYCoord + 1) % waveList.Length;
+        }
+        else if (Input.GetKeyDown(KeyCode.W))
+        {
+            GUIYCoord = (GUIYCoord - 1);
+            if (GUIYCoord < 0)
+                GUIYCoord = waveList.Length - 1;
+        }
+        else if (Input.GetKeyDown(KeyCode.A))
+        {
+            GUIXCoord = (GUIXCoord - 1);
+            if(GUIXCoord < -1)
+                GUIXCoord = 3;
+        }
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            GUIXCoord = (GUIXCoord + 2) % 5 - 1;
+        }
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+            if(GUIXCoord == -1)
+            {
+                waveList[GUIYCoord].ToggleDisabled();
+            }
+            else
+            {
+                float diff = 0.1f;
+                if (Input.GetKey(KeyCode.LeftShift))
+                    diff = 0.5f;
+                switch (GUIXCoord)
+                {
+                    case 0:
+                        waveList[GUIYCoord].A += diff;
+                        break;
+                    case 1:
+                        waveList[GUIYCoord].B += diff;
+                        break;
+                    case 2:
+                        waveList[GUIYCoord].C += diff;
+                        break;
+                    case 3:
+                        waveList[GUIYCoord].D += diff;
+                        break;
+                }
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if (GUIXCoord == -1)
+            {
+                waveList[GUIYCoord].ToggleDisabled();
+            }
+            else
+            {
+                float diff = 0.1f;
+                if (Input.GetKey(KeyCode.LeftShift))
+                    diff = 0.5f;
+                switch (GUIXCoord)
+                {
+                    case 0:
+                        waveList[GUIYCoord].A -= diff;
+                        break;
+                    case 1:
+                        waveList[GUIYCoord].B -= diff;
+                        break;
+                    case 2:
+                        waveList[GUIYCoord].C -= diff;
+                        break;
+                    case 3:
+                        waveList[GUIYCoord].D -= diff;
+                        break;
+                }
             }
         }
 
