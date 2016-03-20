@@ -49,7 +49,7 @@ public class SinWave
         disabled = !disabled;
     }
 
-    public float ComputeSinValue(float x, float z)
+    public float ComputeSinValue(float x, float z, bool isMultByPI)
     {
         if (disabled) return 0f;
 
@@ -58,9 +58,11 @@ public class SinWave
         //return Mathf.Sin(Mathf.Sqrt(x * x + z * z));
         float sinAngle = B * (Mathf.Sqrt(x * x + z * z) - C);
 
-        //sinAngle = sinAngle % 2.0f;
+        float multiByPI = 1.0f;
+        if (isMultByPI)
+            multiByPI = Mathf.PI;
 
-        return A * Mathf.Sin(sinAngle) + D;
+        return A * Mathf.Sin(sinAngle * multiByPI) + D;
     }
 }
 

@@ -241,7 +241,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentWave: 0
   numRows: 50
-  distance: 5
+  distance: 10
   Frequency: 1
   speed: 1
   NumerOfTilesPerRow: 10
