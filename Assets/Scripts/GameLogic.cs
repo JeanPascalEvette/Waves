@@ -29,6 +29,8 @@ public class GameLogic : MonoBehaviour {
     private Vector3[] normalsNeg = null;
 
 
+    private bool displayGUI = false;
+
     private int GUIXCoord = 0;
     private int GUIYCoord = 0;
 
@@ -87,6 +89,8 @@ public class GameLogic : MonoBehaviour {
 
     void OnGUI()
     {
+
+        if (!displayGUI) return;
         var style = new GUIStyle(aSkin.GetStyle("box"));
         var styleHeader = new GUIStyle(aSkin.GetStyle("box"));
         var styleSelected = new GUIStyle(aSkin.GetStyle("box"));
@@ -154,82 +158,91 @@ public class GameLogic : MonoBehaviour {
                 Waves.GetChild(u).GetComponent<MeshBuilder>().toggleWireframe();
             }
         }
-        else if (Input.GetKeyDown(KeyCode.S))
+        else if (Input.GetKeyDown(KeyCode.F1))
         {
-            GUIYCoord = (GUIYCoord + 1) % waveList.Length;
+            displayGUI = !displayGUI;
         }
-        else if (Input.GetKeyDown(KeyCode.W))
+
+        if(displayGUI)
         {
-            GUIYCoord = (GUIYCoord - 1);
-            if (GUIYCoord < 0)
-                GUIYCoord = waveList.Length - 1;
-        }
-        else if (Input.GetKeyDown(KeyCode.A))
-        {
-            GUIXCoord = (GUIXCoord - 1);
-            if(GUIXCoord < -1)
-                GUIXCoord = 3;
-        }
-        else if (Input.GetKeyDown(KeyCode.D))
-        {
-            GUIXCoord = (GUIXCoord + 2) % 5 - 1;
-        }
-        else if (Input.GetKeyDown(KeyCode.E))
-        {
-            if(GUIXCoord == -1)
+            if (Input.GetKeyDown(KeyCode.S))
             {
-                waveList[GUIYCoord].ToggleDisabled();
+                GUIYCoord = (GUIYCoord + 1) % waveList.Length;
             }
-            else
+            else if (Input.GetKeyDown(KeyCode.W))
             {
-                float diff = 0.1f;
-                if (Input.GetKey(KeyCode.LeftShift))
-                    diff = 0.5f;
-                switch (GUIXCoord)
+                GUIYCoord = (GUIYCoord - 1);
+                if (GUIYCoord < 0)
+                    GUIYCoord = waveList.Length - 1;
+            }
+            else if (Input.GetKeyDown(KeyCode.A))
+            {
+                GUIXCoord = (GUIXCoord - 1);
+                if (GUIXCoord < -1)
+                    GUIXCoord = 3;
+            }
+            else if (Input.GetKeyDown(KeyCode.D))
+            {
+                GUIXCoord = (GUIXCoord + 2) % 5 - 1;
+            }
+            else if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (GUIXCoord == -1)
                 {
-                    case 0:
-                        waveList[GUIYCoord].A += diff;
-                        break;
-                    case 1:
-                        waveList[GUIYCoord].B += diff;
-                        break;
-                    case 2:
-                        waveList[GUIYCoord].C += diff;
-                        break;
-                    case 3:
-                        waveList[GUIYCoord].D += diff;
-                        break;
+                    waveList[GUIYCoord].ToggleDisabled();
+                }
+                else
+                {
+                    float diff = 0.1f;
+                    if (Input.GetKey(KeyCode.LeftShift))
+                        diff = 0.5f;
+                    switch (GUIXCoord)
+                    {
+                        case 0:
+                            waveList[GUIYCoord].A += diff;
+                            break;
+                        case 1:
+                            waveList[GUIYCoord].B += diff;
+                            break;
+                        case 2:
+                            waveList[GUIYCoord].C += diff;
+                            break;
+                        case 3:
+                            waveList[GUIYCoord].D += diff;
+                            break;
+                    }
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Q))
+            {
+                if (GUIXCoord == -1)
+                {
+                    waveList[GUIYCoord].ToggleDisabled();
+                }
+                else
+                {
+                    float diff = 0.1f;
+                    if (Input.GetKey(KeyCode.LeftShift))
+                        diff = 0.5f;
+                    switch (GUIXCoord)
+                    {
+                        case 0:
+                            waveList[GUIYCoord].A -= diff;
+                            break;
+                        case 1:
+                            waveList[GUIYCoord].B -= diff;
+                            break;
+                        case 2:
+                            waveList[GUIYCoord].C -= diff;
+                            break;
+                        case 3:
+                            waveList[GUIYCoord].D -= diff;
+                            break;
+                    }
                 }
             }
         }
-        else if (Input.GetKeyDown(KeyCode.Q))
-        {
-            if (GUIXCoord == -1)
-            {
-                waveList[GUIYCoord].ToggleDisabled();
-            }
-            else
-            {
-                float diff = 0.1f;
-                if (Input.GetKey(KeyCode.LeftShift))
-                    diff = 0.5f;
-                switch (GUIXCoord)
-                {
-                    case 0:
-                        waveList[GUIYCoord].A -= diff;
-                        break;
-                    case 1:
-                        waveList[GUIYCoord].B -= diff;
-                        break;
-                    case 2:
-                        waveList[GUIYCoord].C -= diff;
-                        break;
-                    case 3:
-                        waveList[GUIYCoord].D -= diff;
-                        break;
-                }
-            }
-        }
+        
 
 
         //Waves computation
