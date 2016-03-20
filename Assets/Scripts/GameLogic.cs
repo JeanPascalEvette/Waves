@@ -22,6 +22,12 @@ public class GameLogic : MonoBehaviour {
     [SerializeField]
     private GUISkin aSkin;
 
+
+    private int[] triangles = null;
+    private Vector3[] vertices = null;
+    private Vector3[] normals = null;
+
+
     // Use this for initialization
     void Start() {
         numRows += 1; // Most calculation need to be +1'd
@@ -71,7 +77,8 @@ public class GameLogic : MonoBehaviour {
         }
 
 
-    }
+
+}
 
 
     void OnGUI()
@@ -105,15 +112,15 @@ public class GameLogic : MonoBehaviour {
 
                 for (int u = 0; u < waveList.Length; u++)
                 {
-                    var angle = waveList[u].angle;
-                    if (angle != 90.0f && angle != 360.0f && angle != 180.0f && angle != 270.0f && angle != 0.0f)
-                        angle = 0.0f;
-
-
+                    //Calculate Y
                     var newPos = 0.0f;
                     newPos += (waveList[u].ComputeSinValue(currentRelativePos.x + Time.time * speed, currentRelativePos.z + Time.time * speed) * numRows * distance);
 
 
+                    //Calculate x/z
+                    var angle = waveList[u].angle;
+                    if (angle != 90.0f && angle != 360.0f && angle != 180.0f && angle != 270.0f && angle != 0.0f)
+                        angle = 0.0f;
                     var newTarget = Quaternion.AngleAxis(angle, Vector3.up) * new Vector3(x, 0, z);
                     if (angle == 270.0f || angle == 180.0f)
                         newTarget.x += numRows - 1;
@@ -140,35 +147,46 @@ public class GameLogic : MonoBehaviour {
         }
 
 
+        triangles = null;
+        vertices = null;
+        normals = null;
 
-        
+
+    }
+
+    public Vector3[] GetNormals()
+    {
+        return normals;
+    }
+
+    public void SetNormals(Vector3[] newNormals)
+    {
+        if (normals == null)
+            normals = newNormals;
     }
 
     public int[] GetTriangles()
     {
-        int[] triangles = new int[(numRows*numRows)*3*2];
+        if (triangles != null) return triangles;
+        triangles = new int[(numRows*numRows)*3*2];
         int i = 0;
         for (int x = 0; x < numRows-1; x++)
         {
             for (int z = 0; z < numRows-1; z++)
             {
-                triangles[i++] = (x * numRows) + z;
-                triangles[i++] = (x * numRows) + z + 1;
-                triangles[i++] = ((x + 1) * numRows) + z;
+                triangles[i++] = (x * numRows) + z; // 0, 0
+                triangles[i++] = (x * numRows) + z + 1; // 0, 1
+                triangles[i++] = ((x + 1) * numRows) + z; // 1, 0
+
+
+                triangles[i++] = ((x + 1) * numRows) + z; // 1, 0
+                triangles[i++] = (x * numRows) + z + 1; //  0, 1
+                triangles[i++] = ((x + 1) * numRows) + z + 1; // 1, 1
+
+                
             }
         }
-
-
-        for (int x = 0; x < numRows - 1; x++)
-        {
-            for (int z = 0; z < numRows - 1; z++)
-            {
-                triangles[i++] = (x * numRows) + z + 1;
-                triangles[i++] = ((x + 1) * numRows) + z + 1;
-                triangles[i++] = ((x + 1) * numRows) + z;
-            }
-        }
-
+        
 
 
         return triangles;
@@ -176,7 +194,8 @@ public class GameLogic : MonoBehaviour {
 
     public Vector3[] GetVertices()
     {
-        Vector3[] vertices = new Vector3[numRows * numRows * 2];
+        if (vertices != null) return vertices;
+        vertices = new Vector3[numRows * numRows * 2];
         int i = 0;
         for (int x = 0; x < numRows; x++)
         {
@@ -194,4 +213,6 @@ public class GameLogic : MonoBehaviour {
         }
         return vertices;
     }
+
+    
 }

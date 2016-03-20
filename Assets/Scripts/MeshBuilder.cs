@@ -30,7 +30,13 @@ public class MeshBuilder : MonoBehaviour {
             var mesh = GetComponent<MeshFilter>().mesh;
             mesh.vertices = gLogic.GetVertices();
 
-            if(!isWireFrame)
+            //This makes sure to calculate the normals only once - improving performance greatly
+            if (gLogic.GetNormals() == null)
+            {
+                mesh.RecalculateNormals();
+                gLogic.SetNormals(mesh.normals);
+            }
+            if (!isWireFrame)
             {
                 float minHeight = GetComponent<MeshRenderer>().bounds.max.y * .7f;
                 GetComponent<MeshRenderer>().material.SetFloat("_HeightMin", minHeight);

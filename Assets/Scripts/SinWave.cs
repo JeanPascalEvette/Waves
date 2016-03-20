@@ -43,6 +43,7 @@ public class SinWave
         //return Mathf.Sin(Mathf.Sqrt(x * x + z * z));
         float sinAngle = B * (Mathf.Sqrt(x * x + z * z) - C);
 
+        //sinAngle = sinAngle % 2.0f;
 
         return A * Mathf.Sin(sinAngle) + D;
     }
