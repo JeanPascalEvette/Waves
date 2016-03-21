@@ -18,6 +18,8 @@ public class GameLogic : MonoBehaviour {
     public float speed = 1.0f;
     [SerializeField]
     private int NumerOfTilesPerRow = 10;
+    [SerializeField]
+    private int NumberWaves = 1;
 
     [SerializeField]
     private GUISkin aSkin;
@@ -99,14 +101,14 @@ public class GameLogic : MonoBehaviour {
             for (int z = 0; z < numRows; z++)
             {
                 var currentChild = positions[x][z];
-                var currentRelativePos = currentChild / ((numRows-1) * distance) * 10.0f * Frequency;
+                var currentRelativePos = currentChild / ((numRows-1) * distance) * (NumberWaves*distance/100) * 10.0f * Frequency;
                 
 
                 for (int u = 0; u < waveList.Length; u++)
                 {
                     //Calculate Y
                     var newPos = 0.0f;
-                    newPos += (waveList[u].ComputeSinValue(currentRelativePos.x + Time.time * speed, currentRelativePos.z + Time.time * speed, multByPI) * numRows * distance);
+                    newPos += (waveList[u].ComputeSinValue(currentRelativePos.x + Time.time * speed, currentRelativePos.z + Time.time * speed, multByPI) * numRows * distance / 100);
                     
 
                     //Calculate x/z

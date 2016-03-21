@@ -240,11 +240,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentWave: 0
-  numRows: 50
-  distance: 10
+  numRows: 150
+  distance: 100
   Frequency: 1
   speed: 1
-  NumerOfTilesPerRow: 10
+  NumerOfTilesPerRow: 1
+  NumberWaves: 1
   aSkin: {fileID: 11400000, guid: fd8357c8e7ac5004fa1dc560ed88a07d, type: 2}
 --- !u!4 &1636404704
 Transform:
