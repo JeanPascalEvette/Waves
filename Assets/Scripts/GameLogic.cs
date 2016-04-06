@@ -2,7 +2,8 @@
 using System.Collections;
 using System.IO;
 
-public class GameLogic : MonoBehaviour {
+public class GameLogic : MonoBehaviour
+{
 
     private SinWave[] waveList;
     private Vector3[][] positions;
@@ -17,7 +18,7 @@ public class GameLogic : MonoBehaviour {
     public float Frequency = 1.0f;
     public float speed = 1.0f;
     [SerializeField]
-    private int NumerOfTilesPerRow = 10;
+    public int NumerOfTilesPerRow = 10;
 
     [SerializeField]
     private GUISkin aSkin;
@@ -31,13 +32,14 @@ public class GameLogic : MonoBehaviour {
 
     private bool displayGUI = false;
     private bool multByPI = false;
-    private int NumExtraOptions = 1;
+    private int NumExtraOptions = 2;
 
     private int GUIXCoord = 0;
     private int GUIYCoord = 0;
 
     // Use this for initialization
-    void Start() {
+    void Start()
+    {
         numRows += 1; // Most calculation need to be +1'd
         waveList = XMLLoader.LoadFile("Assets/Waves.xml");
 
@@ -47,11 +49,27 @@ public class GameLogic : MonoBehaviour {
             Waves = new GameObject("Waves").transform;
         Waves.transform.position = new Vector3(0, 0, 0);
 
+        GenerateTexture();
 
+
+    }
+
+    void ReGenerateTexture()
+    {
+        for (int i = 0; i < Waves.childCount; i++)
+        {
+            Destroy(Waves.transform.GetChild(i).gameObject);
+        }
+        GenerateTexture();
+    }
+
+
+    void GenerateTexture()
+    {
         positions = new Vector3[numRows][];
         newPositions = new Vector3[numRows][];
 
-        var halfDist = (numRows-1) * distance / 2;
+        var halfDist = (numRows - 1) * distance / 2;
         for (int x = 0; x < numRows; x++)
         {
             positions[x] = new Vector3[numRows];
@@ -74,24 +92,22 @@ public class GameLogic : MonoBehaviour {
             scale.z = originalScale.z;
             for (int y = 0; y < NumerOfTilesPerRow; y++)
             {
-                position.z += (numRows-1) * distance * originalScale.z;
+                position.z += (numRows - 1) * distance * originalScale.z;
                 scale.z *= -1;
                 tile = (GameObject)Instantiate(Resources.Load("Prefabs/WavesTile"), position, Quaternion.identity);
                 tile.transform.localScale = scale;
                 tile.transform.parent = Waves;
             }
             scale.x *= -1;
-            position.x += (numRows-1) * distance * originalScale.x;
+            position.x += (numRows - 1) * distance * originalScale.x;
         }
 
-
-
-}
-
+    }
 
     // Update is called once per frame
-    void Update () {
-        
+    void Update()
+    {
+
 
         //Waves computation
 
@@ -100,15 +116,15 @@ public class GameLogic : MonoBehaviour {
             for (int z = 0; z < numRows; z++)
             {
                 var currentChild = positions[x][z];
-                var currentRelativePos = currentChild / ((numRows-1) * distance) * 10.0f * Frequency;
-                
+                var currentRelativePos = currentChild / ((numRows - 1) * distance) * 10.0f * Frequency;
+
 
                 for (int u = 0; u < waveList.Length; u++)
                 {
                     //Calculate Y
                     var newPos = 0.0f;
                     newPos += (waveList[u].ComputeSinValue(currentRelativePos.x + Time.time * speed, currentRelativePos.z + Time.time * speed, multByPI) * numRows * distance);
-                    
+
 
                     //Calculate x/z
                     var angle = waveList[u].angle;
@@ -123,7 +139,7 @@ public class GameLogic : MonoBehaviour {
                 }
             }
         }
-        
+
         for (int x = 0; x < numRows; x++)
         {
             for (int z = 0; z < numRows; z++)
@@ -152,7 +168,7 @@ public class GameLogic : MonoBehaviour {
                 Waves.GetChild(u).GetComponent<MeshBuilder>().toggleWireframe();
             }
         }
-        else if(Input.GetKeyDown(KeyCode.T))
+        else if (Input.GetKeyDown(KeyCode.T))
         {
             multByPI = !multByPI;
         }
@@ -188,14 +204,14 @@ public class GameLogic : MonoBehaviour {
                 if (GUIYCoord < waveList.Length)
                 {
                     if (GUIXCoord == -1)
-                {
-                    waveList[GUIYCoord].ToggleDisabled();
-                }
-                else
-                {
-                    float diff = 0.1f;
-                    if (Input.GetKey(KeyCode.LeftShift))
-                        diff = 0.5f;
+                    {
+                        waveList[GUIYCoord].ToggleDisabled();
+                    }
+                    else
+                    {
+                        float diff = 0.1f;
+                        if (Input.GetKey(KeyCode.LeftShift))
+                            diff = 0.5f;
                         switch (GUIXCoord)
                         {
                             case 0:
@@ -216,6 +232,11 @@ public class GameLogic : MonoBehaviour {
                 else if (GUIYCoord == waveList.Length - 1 + 1)
                 {
                     multByPI = !multByPI;
+                }
+                else if (GUIYCoord == waveList.Length - 1 + 2)
+                {
+                    NumerOfTilesPerRow++;
+                    ReGenerateTexture();
                 }
             }
             else if (Input.GetKeyDown(KeyCode.Q))
@@ -250,7 +271,13 @@ public class GameLogic : MonoBehaviour {
                 }
                 else if (GUIYCoord == waveList.Length - 1 + 1)
                 {
-                        multByPI = !multByPI;
+                    multByPI = !multByPI;
+                }
+                else if (GUIYCoord == waveList.Length - 1 + 2)
+                {
+                    NumerOfTilesPerRow--;
+                    if (NumerOfTilesPerRow < 1) NumerOfTilesPerRow = 1;
+                    ReGenerateTexture();
                 }
             }
         }
@@ -321,9 +348,26 @@ public class GameLogic : MonoBehaviour {
             CurrentPos.y += yCell + yMargin;
         }
         if (GUIYCoord == waveList.Length - 1 + 1)
-            GUI.Label(new Rect(xMargin , CurrentPos.y, xCell, yCell), "WaveStyle", styleSelected);
+            GUI.Label(new Rect(xMargin, CurrentPos.y, xCell, yCell), "WaveStyle", styleSelected);
         else
-            GUI.Label(new Rect(xMargin , CurrentPos.y, xCell, yCell), "WaveStyle", style);
+            GUI.Label(new Rect(xMargin, CurrentPos.y, xCell, yCell), "WaveStyle", style);
+        CurrentPos.y += yCell + yMargin;
+        if (GUIYCoord == waveList.Length - 1 + 2 && GUIXCoord == 0)
+        {
+            GUI.Label(new Rect(xMargin, CurrentPos.y, xCell, yCell), "TilesPerRow", styleSelected);
+            GUI.Label(new Rect(xMargin + (xCell + xMargin), CurrentPos.y, xCell, yCell), NumerOfTilesPerRow.ToString(), style);
+        }
+        else if (GUIYCoord == waveList.Length - 1 + 2)
+        {
+            GUI.Label(new Rect(xMargin, CurrentPos.y, xCell, yCell), "TilesPerRow", style);
+            GUI.Label(new Rect(xMargin + (xCell + xMargin), CurrentPos.y, xCell, yCell), NumerOfTilesPerRow.ToString(), styleSelected);
+        }
+        else
+        {
+            GUI.Label(new Rect(xMargin, CurrentPos.y, xCell, yCell), "TilesPerRow", style);
+            GUI.Label(new Rect(xMargin + (xCell + xMargin), CurrentPos.y, xCell, yCell), NumerOfTilesPerRow.ToString(), style);
+        }
+        CurrentPos.y += yCell + yMargin;
     }
 
 
@@ -346,11 +390,11 @@ public class GameLogic : MonoBehaviour {
     public int[] GetTriangles()
     {
         if (triangles != null) return triangles;
-        triangles = new int[(numRows*numRows)*3*2];
+        triangles = new int[(numRows * numRows) * 3 * 2];
         int i = 0;
-        for (int x = 0; x < numRows-1; x++)
+        for (int x = 0; x < numRows - 1; x++)
         {
-            for (int z = 0; z < numRows-1; z++)
+            for (int z = 0; z < numRows - 1; z++)
             {
                 triangles[i++] = (x * numRows) + z; // 0, 0
                 triangles[i++] = (x * numRows) + z + 1; // 0, 1
@@ -361,10 +405,10 @@ public class GameLogic : MonoBehaviour {
                 triangles[i++] = (x * numRows) + z + 1; //  0, 1
                 triangles[i++] = ((x + 1) * numRows) + z + 1; // 1, 1
 
-                
+
             }
         }
-        
+
 
 
         return triangles;
@@ -392,5 +436,5 @@ public class GameLogic : MonoBehaviour {
         return vertices;
     }
 
-    
+
 }
