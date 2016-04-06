@@ -31,6 +31,7 @@ public class GameLogic : MonoBehaviour {
 
     private bool displayGUI = false;
     private bool multByPI = false;
+    private int NumExtraOptions = 1;
 
     private int GUIXCoord = 0;
     private int GUIYCoord = 0;
@@ -164,13 +165,13 @@ public class GameLogic : MonoBehaviour {
         {
             if (Input.GetKeyDown(KeyCode.S))
             {
-                GUIYCoord = (GUIYCoord + 1) % waveList.Length;
+                GUIYCoord = (GUIYCoord + 1) % (waveList.Length + NumExtraOptions);
             }
             else if (Input.GetKeyDown(KeyCode.W))
             {
                 GUIYCoord = (GUIYCoord - 1);
                 if (GUIYCoord < 0)
-                    GUIYCoord = waveList.Length - 1;
+                    GUIYCoord = waveList.Length + NumExtraOptions - 1;
             }
             else if (Input.GetKeyDown(KeyCode.A))
             {
@@ -184,7 +185,9 @@ public class GameLogic : MonoBehaviour {
             }
             else if (Input.GetKeyDown(KeyCode.E))
             {
-                if (GUIXCoord == -1)
+                if (GUIYCoord < waveList.Length)
+                {
+                    if (GUIXCoord == -1)
                 {
                     waveList[GUIYCoord].ToggleDisabled();
                 }
@@ -193,49 +196,61 @@ public class GameLogic : MonoBehaviour {
                     float diff = 0.1f;
                     if (Input.GetKey(KeyCode.LeftShift))
                         diff = 0.5f;
-                    switch (GUIXCoord)
-                    {
-                        case 0:
-                            waveList[GUIYCoord].A += diff;
-                            break;
-                        case 1:
-                            waveList[GUIYCoord].B += diff;
-                            break;
-                        case 2:
-                            waveList[GUIYCoord].C += diff;
-                            break;
-                        case 3:
-                            waveList[GUIYCoord].D += diff;
-                            break;
+                        switch (GUIXCoord)
+                        {
+                            case 0:
+                                waveList[GUIYCoord].A += diff;
+                                break;
+                            case 1:
+                                waveList[GUIYCoord].B += diff;
+                                break;
+                            case 2:
+                                waveList[GUIYCoord].C += diff;
+                                break;
+                            case 3:
+                                waveList[GUIYCoord].D += diff;
+                                break;
+                        }
                     }
+                }
+                else if (GUIYCoord == waveList.Length - 1 + 1)
+                {
+                    multByPI = !multByPI;
                 }
             }
             else if (Input.GetKeyDown(KeyCode.Q))
             {
-                if (GUIXCoord == -1)
+                if (GUIYCoord < waveList.Length)
                 {
-                    waveList[GUIYCoord].ToggleDisabled();
-                }
-                else
-                {
-                    float diff = 0.1f;
-                    if (Input.GetKey(KeyCode.LeftShift))
-                        diff = 0.5f;
-                    switch (GUIXCoord)
+                    if (GUIXCoord == -1)
                     {
-                        case 0:
-                            waveList[GUIYCoord].A -= diff;
-                            break;
-                        case 1:
-                            waveList[GUIYCoord].B -= diff;
-                            break;
-                        case 2:
-                            waveList[GUIYCoord].C -= diff;
-                            break;
-                        case 3:
-                            waveList[GUIYCoord].D -= diff;
-                            break;
+                        waveList[GUIYCoord].ToggleDisabled();
                     }
+                    else
+                    {
+                        float diff = 0.1f;
+                        if (Input.GetKey(KeyCode.LeftShift))
+                            diff = 0.5f;
+                        switch (GUIXCoord)
+                        {
+                            case 0:
+                                waveList[GUIYCoord].A -= diff;
+                                break;
+                            case 1:
+                                waveList[GUIYCoord].B -= diff;
+                                break;
+                            case 2:
+                                waveList[GUIYCoord].C -= diff;
+                                break;
+                            case 3:
+                                waveList[GUIYCoord].D -= diff;
+                                break;
+                        }
+                    }
+                }
+                else if (GUIYCoord == waveList.Length - 1 + 1)
+                {
+                        multByPI = !multByPI;
                 }
             }
         }
@@ -278,16 +293,16 @@ public class GameLogic : MonoBehaviour {
         {
             if (GUIXCoord == -1 && GUIYCoord == y)
                 GUI.Label(new Rect(CurrentPos.x, CurrentPos.y, xCell, yCell), "Wave " + y, styleSelected);
-            else if(waveList[y].IsDisabled())
+            else if (waveList[y].IsDisabled())
                 GUI.Label(new Rect(CurrentPos.x, CurrentPos.y, xCell, yCell), "Wave " + y, styleDisabled);
             else
                 GUI.Label(new Rect(CurrentPos.x, CurrentPos.y, xCell, yCell), "Wave " + y, style);
 
 
-            for(int x = 1; x <= 4; x++)
+            for (int x = 1; x <= 4; x++)
             {
                 float value = 0f;
-                switch(x)
+                switch (x)
                 {
                     case 1: value = waveList[y].A; break;
                     case 2: value = waveList[y].B; break;
@@ -301,12 +316,15 @@ public class GameLogic : MonoBehaviour {
                 else
                     GUI.Label(new Rect(CurrentPos.x + (xCell + xMargin) * x, CurrentPos.y, xCell, yCell), value.ToString("F1"), style);
             }
-            
+
 
             CurrentPos.y += yCell + yMargin;
         }
+        if (GUIYCoord == waveList.Length - 1 + 1)
+            GUI.Label(new Rect(xMargin , CurrentPos.y, xCell, yCell), "WaveStyle", styleSelected);
+        else
+            GUI.Label(new Rect(xMargin , CurrentPos.y, xCell, yCell), "WaveStyle", style);
     }
-
 
 
     public Vector3[] GetNormals(float scale)
